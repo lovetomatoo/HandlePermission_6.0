@@ -1,7 +1,10 @@
 package com.ghx.handlepermission_60.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,11 +12,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.ghx.handlepermission_60.utils.BitmapUtils;
 import com.ghx.handlepermission_60.utils.ExtendMediaPicker;
+import com.ghx.handlepermission_60.utils.PermissionUtils;
 import com.ghx.handlepermission_60.weiget.ActionSheetDialog;
 import com.ghx.handlepermission_60.R;
-
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     //    来新公司马上三个月了，2.3的版本终于要上线了，真不容易啊，加班加班加班。我只想
@@ -54,8 +57,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMediaPicker.setOnPicBackListener(new ExtendMediaPicker.PicBackListener() {
             @Override
             public void setPic(String imagePath) {
+
                 //把图片的path回调回来————处理，将图片拿到__展示即可
-                //TODO...
+                Bitmap photo = BitmapUtils.decodeBitmap(imagePath);
+                mIvShow.setImageBitmap(photo);
             }
         });
     }
@@ -72,6 +77,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void toPickPicture() {
+        //这里遇到个问题，国产rom贼sb，（小米4，6.1系统），一开始，我测试的时候，读外部存储是危险权限，后来，卸载再安装，他都说不是了。。。
+        //去设置里设置，根本没用！根本没用！
+        //拿原生的rom一测，没问题。。。。。国产rom。。开发者的痛苦。。。。。。。。
         new ActionSheetDialog(this).builder()
                 .setCancelable(true)
                 .setCanceledOnTouchOutside(true)
@@ -80,44 +88,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void onClick(int which) {
 
-//                                //判断权限
-//                                if (isPermissionRequired(MainActivity.this,
-//                                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
-//                                    //如果需要权限，则去申请
-//                                    ActivityCompat.requestPermissions(MainActivity.this,
-//                                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-//                                            MYPERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_ALBUM);
-//                                } else {
-//                                    //做该做的事
-//                                    Toast.makeText(getApplicationContext(),
-//                                            "访问相册",
-//                                            Toast.LENGTH_SHORT).show();
+                                //判断权限
+//                                boolean permissionRequired = PermissionUtils.isPermissionRequired(MainActivity.this,
+//                                        Manifest.permission.READ_EXTERNAL_STORAGE);
 
-                                mMediaPicker.showPickerView(false);
+                                if (PermissionUtils.isPermissionRequired(MainActivity.this,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                    //如果需要权限，则去申请
+                                    ActivityCompat.requestPermissions(MainActivity.this,
+                                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                            MYPERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_ALBUM);
+                                } else {
+                                    //做该做的事
+                                    Toast.makeText(getApplicationContext(),
+                                            "不是危险权限，直接访问相册",
+                                            Toast.LENGTH_SHORT).show();
+
+                                    mMediaPicker.showPickerView(false);
+                                }
+
                             }
-
-//                            }
                         })
+                //这里是调用系统相机，开始我以为是需要CAMERA权限的，but__这里只是去调用系统的相机功能去拍照，并没有使用CAMERA__API
+                //所以并不需要权限。但是虽然不需要CAMERA权限，但是图片是从sd卡取得，所以同样要加上读外部存储的权限
+                //这里，在公司项目里遇到了一个很坑爹的事情，开始，我只在这里加了外部存储权限，因为相机的权限是不需要的
+                //但是后来，公司业务牵扯到录像功能，涉及到相机的权限了，这里，竟然崩了！！我这里和原来没有区别，别的地方用到了相机权限，关这里
+                //啥事，为什么这里会crash？？
+                //只能解释为：项目中需要相机权限了，这里，也要加上相机权限的动态申请了。。。好无奈TAT
+                //所以，这里，就要申请读外部存储和相机两个权限了。。。（这里不涉及，如果遇到类似问题，再申请下相机权限即可）
                 .addSheetItem("拍照", ActionSheetDialog.SheetItemColor.Blue,
                         new ActionSheetDialog.OnSheetItemClickListener() {
                             @Override
                             public void onClick(int which) {
 
-//                                //判断权限
-//                                if (isPermissionRequired(MainActivity.this,
-//                                                Manifest.permission.CAMERA)) {
-//                                    //如果需要权限，则去申请
-//                                    ActivityCompat.requestPermissions(MainActivity.this,
-//                                            new String[]{Manifest.permission.CAMERA},
-//                                            MYPERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_PHOTOGRAPH);
-//                                } else {
-//                                    //做该做的事
-                                Toast.makeText(getApplicationContext(),
-                                        "访问相机",
-                                        Toast.LENGTH_SHORT).show();
+                                //判断权限
+//                                boolean permissionRequired = PermissionUtils.isPermissionRequired(MainActivity.this,
+//                                        Manifest.permission.READ_EXTERNAL_STORAGE);
 
-                                mMediaPicker.showPickerView(true);
-//                                }
+                                if (PermissionUtils.isPermissionRequired(MainActivity.this,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                    //如果需要权限，则去申请
+                                    ActivityCompat.requestPermissions(MainActivity.this,
+                                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                            MYPERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_PHOTOGRAPH);
+                                } else {
+                                    //做该做的事
+                                    Toast.makeText(getApplicationContext(),
+                                            "不是危险权限，直接访问相机",
+                                            Toast.LENGTH_SHORT).show();
+
+                                    mMediaPicker.showPickerView(true);
+                                }
                             }
                         })
                 .show();
@@ -137,6 +158,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (requestCode) {
             case MYPERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_ALBUM:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(),
+                            "是危险权限，回调访问相册",
+                            Toast.LENGTH_SHORT).show();
                     mMediaPicker.showPickerView(false);
                 } else {
                     Toast.makeText(getApplicationContext(),
@@ -146,6 +170,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case MYPERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_PHOTOGRAPH:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(),
+                            "是危险权限，回调访问相机",
+                            Toast.LENGTH_SHORT).show();
                     mMediaPicker.showPickerView(true);
                 } else {
                     Toast.makeText(getApplicationContext(),
@@ -162,10 +189,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
+    /**调用系统相册，相机__隐藏跳转的回调*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        //这种代码，请不要写在Activity里，直接交给他自己处理
         mMediaPicker.onActivityResult(requestCode, resultCode, data);
     }
 }

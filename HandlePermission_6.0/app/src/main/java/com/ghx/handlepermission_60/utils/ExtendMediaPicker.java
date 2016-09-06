@@ -69,7 +69,7 @@ public class ExtendMediaPicker {
                 break;
             case REQUEST_CODE_TAKE_PHOTO:
 
-                cropImageUri(imageUri, 300, 300, REQUEST_CODE_CROP_PHOTO);
+                cropImageUri(imageUri, 500, 500, REQUEST_CODE_CROP_PHOTO);
 
                 break;
             case REQUEST_CODE_CROP_PHOTO:
