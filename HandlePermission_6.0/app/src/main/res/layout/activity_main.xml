@@ -5,16 +5,18 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_gravity="center_horizontal"
         android:id="@+id/iv_show"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1" />
 
     <Button
-        android:layout_gravity="bottom"
+        android:text="点击更换图片"
         android:id="@+id/btn_select"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 
 </LinearLayout>
 
