@@ -19,7 +19,7 @@ import com.ghx.handlepermission_60.weiget.ActionSheetDialog;
 import com.ghx.handlepermission_60.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    //    来新公司马上三个月了，2.3的版本终于要上线了，真不容易啊，加班加班加班。我只想
+    //    来新公司马上三个月了，2.3的版本终于要上线了，真不容易啊，加班加班加班。
     private static final int MYPERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_ALBUM = 1;
     private static final int MYPERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_PHOTOGRAPH = 2;
     private ImageView mIvShow;
@@ -89,9 +89,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void onClick(int which) {
 
                                 //判断权限
-//                                boolean permissionRequired = PermissionUtils.isPermissionRequired(MainActivity.this,
-//                                        Manifest.permission.READ_EXTERNAL_STORAGE);
-
                                 if (PermissionUtils.isPermissionRequired(MainActivity.this,
                                         Manifest.permission.READ_EXTERNAL_STORAGE)) {
                                     //如果需要权限，则去申请
@@ -122,9 +119,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void onClick(int which) {
 
                                 //判断权限
-//                                boolean permissionRequired = PermissionUtils.isPermissionRequired(MainActivity.this,
-//                                        Manifest.permission.READ_EXTERNAL_STORAGE);
-
                                 if (PermissionUtils.isPermissionRequired(MainActivity.this,
                                         Manifest.permission.READ_EXTERNAL_STORAGE)) {
                                     //如果需要权限，则去申请
@@ -189,7 +183,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    /**调用系统相册，相机__隐藏跳转的回调*/
+    /**
+     * 调用系统相册，相机__隐藏跳转的回调
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //这种代码，请不要写在Activity里，直接交给他自己处理
