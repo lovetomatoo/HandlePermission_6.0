@@ -101,7 +101,6 @@ public class RxPermissionActivity extends AppCompatActivity implements View.OnCl
 
     //https://github.com/tbruyelle/RxPermissions
     private void toPickPicture() {
-
         //小米6.0的手机自己做处理了，如果不动态申请权限的话，不会crash，只是会拿不到图片而已。
         //我想说，这样做rom，真的好么？？？
 
@@ -121,16 +120,11 @@ public class RxPermissionActivity extends AppCompatActivity implements View.OnCl
                                     @Override
                                     public void call(Boolean aBoolean) {
                                         if (aBoolean) {
-
                                             mMediaPicker.showPickerView(false);
-                                            Toast.makeText(getApplicationContext(),
-                                                    "是危险权限，回调访问相机",
-                                                    Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), "是危险权限，回调访问相机", Toast.LENGTH_SHORT).show();
                                         }else {
 
-                                            Toast.makeText(getApplicationContext(),
-                                                    "需要权限，请在设置－>全部应用中打开",
-                                                    Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), "需要权限，请在设置－>全部应用中打开", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
