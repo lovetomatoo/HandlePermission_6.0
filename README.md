@@ -1,14 +1,19 @@
 ﻿# HandlePermission_6.0
 6.0权限处理__动态申请权限
 
-第一个页面，用最普遍的Google提供的方法做权限申请：
-  1.判断是否需要申请/n
+#第一个页面，用最普遍的Google提供的方法做权限申请：
+  1.判断是否需要申请
+  
     若需要，那么去request这个权限
+    
     若不需要，Do some thing.
+    
   2.重写权限处理的回调 onRequestPermissionsResult
+  
     处理
 
-第二个页面，用rxpermission处理权限
+#第二个页面，用rxpermission处理权限
+
   1.    
     //RxJava
     compile 'io.reactivex:rxjava:1.1.8'
@@ -17,7 +22,8 @@
   2. 
     compileOptions {//对lambda的支持
         sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+
+targetCompatibility JavaVersion.VERSION_1_8
     }
     
   3.
@@ -33,6 +39,10 @@
                                 });
        OVER,就不用重写回调了，方便了很多！                         
     
+
+
+
+
 
 
 附：
