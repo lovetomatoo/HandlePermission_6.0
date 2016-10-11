@@ -34,7 +34,7 @@
     
   3.
   
-    RxPermissions.getInstance(RxPermissionActivity.this)
+      RxPermissions.getInstance(RxPermissionActivity.this)
     
                                 .request(Manifest.permission.READ_EXTERNAL_STORAGE)
                                 
