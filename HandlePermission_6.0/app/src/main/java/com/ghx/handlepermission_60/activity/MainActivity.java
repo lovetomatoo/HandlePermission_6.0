@@ -19,12 +19,39 @@ import com.ghx.handlepermission_60.weiget.ActionSheetDialog;
 import com.ghx.handlepermission_60.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    //    来新公司马上三个月了，2.3的版本终于要上线了，真不容易啊，加班加班加班。
+    //    来新公司马上三个月了，2.2的版本终于要上线了，真不容易啊，加班加班加班。
+    /*
+*
+*          ┌─┐       ┌─┐
+*       ┌──┘ ┴───────┘ ┴──┐
+*       │                 │
+*       │       ───       │
+*       │  ─┬┘       └┬─  │
+*       │                 │
+*       │       ─┴─       │
+*       │                 │
+*       └───┐         ┌───┘
+*           │         │
+*           │         │
+*           │         │
+*           │         └──────────────┐
+*           │                        │
+*           │                        ├─┐
+*           │                        ┌─┘
+*           │                        │
+*           └─┐  ┐  ┌───────┬──┐  ┌──┘
+*             │ ─┤ ─┤       │ ─┤ ─┤
+*             └──┴──┘       └──┴──┘
+*                 神兽保佑
+*                 代码无BUG!
+*/
+
     private static final int MYPERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_ALBUM = 1;
     private static final int MYPERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_PHOTOGRAPH = 2;
     private ImageView mIvShow;
     private Button mBtnSelect;
     private ExtendMediaPicker mMediaPicker;
+    private Button mBtnToRxPermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initView() {
         mIvShow = (ImageView) findViewById(R.id.iv_show);
         mBtnSelect = (Button) findViewById(R.id.btn_select);
+        mBtnToRxPermission = (Button) findViewById(R.id.btn_to_rxpermission);
 
     }
 
@@ -53,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initListener() {
 
         mBtnSelect.setOnClickListener(this);
+
+        mBtnToRxPermission.setOnClickListener(this);
 
         mMediaPicker.setOnPicBackListener(new ExtendMediaPicker.PicBackListener() {
             @Override
@@ -73,6 +103,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 toPickPicture();
             }
             break;
+            case R.id.btn_to_rxpermission: {
+                startActivity(new Intent(MainActivity.this, RxPermissionActivity.class));
+            }
+            break;
         }
     }
 
@@ -80,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //这里遇到个问题，国产rom贼sb，（小米4，6.1系统），一开始，我测试的时候，读外部存储是危险权限，后来，卸载再安装，他都说不是了。。。
         //去设置里设置，根本没用！根本没用！
         //拿原生的rom一测，没问题。。。。。国产rom。。开发者的痛苦。。。。。。。。
+
+        //上面这个问题，后来想了想。
+        //原因肯定是小米rom的问题这个肯定没错。
+        //但是为什么会这样呢?
+        //应该是我同意此应用的危险权限以后，小米在某个地方记录了。去设置里修改，还是没有用，说明他不是每次都是设置里读取的！
+
         new ActionSheetDialog(this).builder()
                 .setCancelable(true)
                 .setCanceledOnTouchOutside(true)
@@ -98,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 } else {
                                     //做该做的事
                                     Toast.makeText(getApplicationContext(),
-                                            "不是危险权限，直接访问相册",
+                                            "不是危险权限或者已经同意，直接访问相册",
                                             Toast.LENGTH_SHORT).show();
 
                                     mMediaPicker.showPickerView(false);
@@ -128,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 } else {
                                     //做该做的事
                                     Toast.makeText(getApplicationContext(),
-                                            "不是危险权限，直接访问相机",
+                                            "不是危险权限或者已经同意，直接访问相机",
                                             Toast.LENGTH_SHORT).show();
 
                                     mMediaPicker.showPickerView(true);

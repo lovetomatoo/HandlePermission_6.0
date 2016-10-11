@@ -18,12 +18,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />
 
-    <Button
-        android:text="rxpermission处理权限"
-        android:id="@+id/btn_to_rxpermission"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
 
 </LinearLayout>
-
