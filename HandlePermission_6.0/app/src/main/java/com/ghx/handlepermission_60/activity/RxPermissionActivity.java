@@ -1,5 +1,8 @@
 package com.ghx.handlepermission_60.activity;
 
+import android.Manifest;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +12,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ghx.handlepermission_60.R;
+import com.ghx.handlepermission_60.utils.rxpermission.RxPermissions;
+import com.ghx.handlepermission_60.utils.BitmapUtils;
 import com.ghx.handlepermission_60.utils.ExtendMediaPicker;
+import com.ghx.handlepermission_60.weiget.ActionSheetDialog;
+
+import rx.functions.Action1;
 
 /**
  * Created by guo_hx on 2016/10/11.13:21
@@ -70,6 +78,14 @@ public class RxPermissionActivity extends AppCompatActivity implements View.OnCl
     private void initListener() {
 
         mBtnSelector.setOnClickListener(this);
+
+        mMediaPicker.setOnPicBackListener(new ExtendMediaPicker.PicBackListener() {
+            @Override
+            public void setPic(String imagePath) {
+                Bitmap photo = BitmapUtils.decodeBitmap(imagePath);
+                mIvShow.setImageBitmap(photo);
+            }
+        });
     }
 
     @Override
@@ -83,8 +99,73 @@ public class RxPermissionActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    //https://github.com/tbruyelle/RxPermissions
     private void toPickPicture() {
-        Toast.makeText(getApplicationContext(), "嘀嘀嘀", Toast.LENGTH_SHORT).show();
+
+        //小米6.0的手机自己做处理了，如果不动态申请权限的话，不会crash，只是会拿不到图片而已。
+        //我想说，这样做rom，真的好么？？？
+
+        new ActionSheetDialog(this).builder()
+                .setCancelable(true)
+                .setCanceledOnTouchOutside(true)
+                .addSheetItem("从相册选择",
+                        ActionSheetDialog.SheetItemColor.Blue,
+                         new ActionSheetDialog.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(int which) {
+                        //看！简单多了！
+                        //不用再写 onRequestPermissionsResult 的回调了
+                        RxPermissions.getInstance(RxPermissionActivity.this)
+                                .request(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                .subscribe(new Action1<Boolean>() {
+                                    @Override
+                                    public void call(Boolean aBoolean) {
+                                        if (aBoolean) {
+
+                                            mMediaPicker.showPickerView(false);
+                                            Toast.makeText(getApplicationContext(),
+                                                    "是危险权限，回调访问相机",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }else {
+
+                                            Toast.makeText(getApplicationContext(),
+                                                    "需要权限，请在设置－>全部应用中打开",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+
+                    }
+                })
+                .addSheetItem("拍照",
+                        ActionSheetDialog.SheetItemColor.Red,
+                        new ActionSheetDialog.OnSheetItemClickListener(){
+                    @Override
+                    public void onClick(int which) {
+                        //上面那个没有使用Lamada表达式
+                        //为了让代码更简洁，使用 Lamada 表达式让代码更简洁！
+                        RxPermissions.getInstance(RxPermissionActivity.this)
+                                .request(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                .subscribe(aBoolean -> {
+                                    if (aBoolean) {
+                                        mMediaPicker.showPickerView(true);
+                                        Toast.makeText(getApplicationContext(), "是危险权限，回调访问相机", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "需要权限，请在设置－>全部应用中打开", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                        //这样贼爽啊！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        mMediaPicker.onActivityResult(requestCode, resultCode, data);
     }
 
 }

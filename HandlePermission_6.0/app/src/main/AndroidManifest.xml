@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ghx.handlepermission_60">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -19,8 +19,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.RxPermissionActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.RxPermissionActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".utils.rxpermission.ShadowActivity" />
 
     </application>
 
