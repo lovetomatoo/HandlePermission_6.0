@@ -1,5 +1,4 @@
-
-
+a
 # HandlePermission_6.0
 6.0权限处理__动态申请权限
 
@@ -33,6 +32,7 @@
     }
     
   3.
+    代码
   
       RxPermissions.getInstance(RxPermissionActivity.this)
     
