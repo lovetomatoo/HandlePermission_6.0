@@ -1,10 +1,42 @@
 ﻿# HandlePermission_6.0
 6.0权限处理__动态申请权限
 
-Android  
+第一个页面，用最普遍的Google提供的方法做权限申请：
+  1.判断是否需要申请
+    若需要，那么去request这个权限
+    若不需要，Do some thing.
+  2.重写权限处理的回调 onRequestPermissionsResult
+    处理
+
+第二个页面，用rxpermission处理权限
+  1.    
+    //RxJava
+    compile 'io.reactivex:rxjava:1.1.8'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    
+  2. 
+    compileOptions {//对lambda的支持
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    
+  3.
+    RxPermissions.getInstance(RxPermissionActivity.this)
+                                .request(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                .subscribe(aBoolean -> {
+                                    if (aBoolean) {
+                                        mMediaPicker.showPickerView(true);
+                                        Toast.makeText(getApplicationContext(), "是危险权限，回调访问相机", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "需要权限，请在设置－>全部应用中打开", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+       OVER,就不用重写回调了，方便了很多！                         
+    
 
 
-Dangerous Permissions:
+附：
+Android Dangerous Permissions:
 
 group:android.permission-group.CONTACTS
   permission:android.permission.WRITE_CONTACTS
